@@ -1,0 +1,17 @@
+# systemd unit: keeps the command centre running and restarts it automatically.
+#   sudo cp deploy/pavan-sewa.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now pavan-sewa
+[Unit]
+Description=PAVAN SEWA Command - disaster triage & dispatch
+After=network-online.target
+
+[Service]
+User=linux1
+WorkingDirectory=/home/linux1/pavan-sewa-command
+Environment=PSC_PORT=8080
+ExecStart=/usr/bin/python3 app.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

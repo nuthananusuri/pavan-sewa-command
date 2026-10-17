@@ -1,0 +1,22 @@
+{
+ "ai": {
+  "critical_reached_in_time_pct": 65.3,
+  "urgent_reached_in_time_pct": 51.3,
+  "stable_reached_in_time_pct": 87.6,
+  "critical_median_wait_min": 47.1
+ },
+ "fcfs": {
+  "critical_reached_in_time_pct": 16.9,
+  "urgent_reached_in_time_pct": 50.7,
+  "stable_reached_in_time_pct": 94.7,
+  "critical_median_wait_min": 271.2
+ },
+ "setup": {
+  "incidents_per_surge": 300,
+  "avg_critical_incidents": 50.4,
+  "surge_hours": 6.0,
+  "fleet": "9 medical drones + 9 rescue boats across 3 bases",
+  "runs": 10
+ },
+ "extra_critical_cases_reached_in_time": 24.4
+}

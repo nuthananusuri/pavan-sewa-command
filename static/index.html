@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PAVAN SEWA Command</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#121820; --panel2:#18202b; --line:#253141; --text:#e6edf3; --muted:#8b98a8;
+  --crit:#ff4d4f; --urg:#ffb020; --stable:#3fb68b; --accent:#ff9933; --blue:#4c9aff;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{display:flex;align-items:center;gap:16px;padding:12px 20px;border-bottom:1px solid var(--line);background:#0e141b;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#c0392b);display:grid;place-items:center;font-weight:800}
+.brand h1{font-size:17px;margin:0;letter-spacing:.06em}
+.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.04em}
+.badge{font:12px var(--mono);padding:5px 9px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.badge.z{border-color:#2b5d9e;color:#9cc6ff;background:#0f2238}
+.spacer{flex:1}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:7px;padding:8px 12px;font:600 13px system-ui;cursor:pointer}
+button:hover{border-color:#3a4b60}
+button.primary{background:var(--accent);border-color:var(--accent);color:#1a0f00}
+button.danger{background:#3a1416;border-color:#6b2226;color:#ffb3b5}
+button.sm{padding:4px 9px;font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 20px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.kpi .v{font:700 26px var(--mono)}
+.kpi .l{color:var(--muted);font-size:12px}
+.kpi.crit .v{color:var(--crit)} .kpi.urg .v{color:var(--urg)} .kpi.st .v{color:var(--stable)}
+main{display:grid;grid-template-columns:1.35fr 1fr;gap:14px;padding:0 20px 14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.panel h2{margin:0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.panel h2 .r{margin-left:auto;text-transform:none;letter-spacing:0}
+#map{width:100%;height:440px;display:block;background:#0d141c}
+.legend{display:flex;gap:14px;padding:8px 14px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+#queue{overflow:auto;max-height:478px}
+.item{padding:9px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center}
+.item:hover{background:var(--panel2)}
+.score{font:700 20px var(--mono);text-align:center}
+.chip{display:inline-block;font:700 10px system-ui;letter-spacing:.06em;padding:2px 6px;border-radius:4px}
+.chip.CRITICAL{background:#3d1214;color:#ff8a8c} .chip.URGENT{background:#3a2a08;color:#ffd27a} .chip.STABLE{background:#0f2e23;color:#7fdcb5}
+.reasons{color:var(--muted);font-size:12px;margin-top:3px}
+.reasons b{color:var(--text);font-weight:500}
+.meta{font:11px var(--mono);color:var(--muted);text-align:right}
+.rev{color:var(--urg);font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+td.mono{font-family:var(--mono)}
+.bottom{display:grid;grid-template-columns:1.1fr 1fr 1fr 1fr;gap:14px;padding:0 20px 24px}
+.pad{padding:12px 14px}
+.bar{height:22px;border-radius:5px;background:#1f2a37;position:relative;margin:5px 0 12px;overflow:hidden}
+.bar>span{position:absolute;left:0;top:0;bottom:0;border-radius:5px}
+.bar>em{position:absolute;right:8px;top:2px;font:600 12px var(--mono);font-style:normal}
+.small{font-size:12px;color:var(--muted)}
+#audit{font:11px var(--mono);max-height:230px;overflow:auto}
+#audit div{padding:5px 14px;border-bottom:1px solid var(--line);color:var(--muted)}
+#audit div b{color:var(--text)}
+#drawer{position:fixed;right:20px;top:80px;width:360px;background:var(--panel2);border:1px solid #33465c;border-radius:12px;box-shadow:0 20px 50px #000a;display:none;z-index:5}
+#drawer .pad h3{margin:0 0 4px}
+.prob{display:grid;grid-template-columns:80px 1fr 50px;gap:8px;align-items:center;font-size:12px;margin:4px 0}
+.prob .bar{margin:0;height:10px}
+.kv{display:grid;grid-template-columns:1fr auto;font-size:12px;gap:3px 10px;margin-top:8px}
+.kv span:nth-child(odd){color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#132a1f;border:1px solid #2c6b4f;color:#b8f0d6;padding:10px 16px;border-radius:8px;display:none;z-index:9}
+.caption{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#000c;color:#fff;font:600 19px system-ui;padding:12px 22px;border-radius:10px;max-width:80%;text-align:center;display:none;z-index:20;border:1px solid #ffffff22}
+@media (max-width:1100px){main,.bottom{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="mark">PS</div><div><h1>PAVAN SEWA COMMAND</h1><small>REAL-TIME DISASTER TRIAGE &amp; DISPATCH · AI ON IBM LinuxONE</small></div></div>
+  <span class="badge" id="arch">arch: …</span>
+  <span class="badge" id="clock">T+0 min</span>
+  <span class="spacer"></span>
+  <button class="primary" id="startBtn">▶ Start flood surge simulation</button>
+  <button id="stopBtn">■ Stop</button>
+</header>
+
+<section class="kpis">
+  <div class="kpi crit"><div class="v" id="kC">0</div><div class="l">Open CRITICAL</div></div>
+  <div class="kpi urg"><div class="v" id="kU">0</div><div class="l">Open URGENT</div></div>
+  <div class="kpi st"><div class="v" id="kS">0</div><div class="l">Open STABLE</div></div>
+  <div class="kpi"><div class="v" id="kD">0</div><div class="l">Dispatched (human-approved)</div></div>
+  <div class="kpi"><div class="v" id="kP50">–</div><div class="l">Inference p50 (µs)</div></div>
+  <div class="kpi"><div class="v" id="kP99">–</div><div class="l">Inference p99 (µs)</div></div>
+</section>
+
+<main>
+  <div class="panel">
+    <h2>Situation map · Tiruchirappalli flood zone <span class="r small" id="mapNote"></span></h2>
+    <canvas id="map"></canvas>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--crit)"></i>Critical</span>
+      <span><i class="dot" style="background:var(--urg)"></i>Urgent</span>
+      <span><i class="dot" style="background:var(--stable)"></i>Stable</span>
+      <span><i class="dot" style="background:var(--blue);border-radius:2px"></i>Base (drones + boats)</span>
+      <span>— dispatched route</span>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>AI priority queue <span class="r small">click an incident for the explanation</span></h2>
+    <div id="queue"></div>
+  </div>
+</main>
+
+<section style="padding:0 20px 14px">
+  <div class="panel">
+    <h2>Proposed dispatch plan · human-in-the-loop
+      <span class="r"><button class="sm danger" id="approveCrit">Approve all CRITICAL</button></span></h2>
+    <table><thead><tr><th>Incident</th><th>Triage</th><th>Priority</th><th>Resource</th><th>ETA</th><th></th></tr></thead><tbody id="plan"></tbody></table>
+  </div>
+</section>
+
+<section class="bottom">
+  <div class="panel"><h2>Impact · AI dispatch vs first-come-first-served</h2><div class="pad" id="impact"></div></div>
+  <div class="panel"><h2>Model card</h2><div class="pad" id="mcard"></div></div>
+  <div class="panel"><h2>Privacy &amp; IBM Z</h2><div class="pad small" id="priv">
+    <p>• Reporter names &amp; phones stored only as <b style="color:var(--text)">AES ciphertext</b> (CPACF-accelerated on IBM Z).</p>
+    <p>• Operators see a pseudonym + masked number. Only <b style="color:var(--text)">rescue-lead</b> can decrypt — every reveal is audited.</p>
+    <p>• Inference runs <b style="color:var(--text)">on the same platform as the data</b>: no external AI API, no data leaves LinuxONE.</p>
+    <p>• Low-confidence predictions are flagged for <b style="color:var(--text)">human review</b>; no dispatch happens without approval.</p>
+  </div></div>
+  <div class="panel"><h2>Audit log</h2><div id="audit"></div></div>
+</section>
+
+<div id="drawer"><div class="pad" id="drawerBody"></div></div>
+<div class="toast" id="toast"></div>
+<div class="caption" id="caption"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const COLORS = {CRITICAL:'#ff4d4f', URGENT:'#ffb020', STABLE:'#3fb68b'};
+let incidents = [], fleet = {bases:[], resources:[]}, planRows = [], selected = null;
+const BOUNDS = {lat0:10.66, lat1:10.97, lon0:78.47, lon1:78.93};
+
+async function j(url, opts){ const r = await fetch(url, opts); return r.json(); }
+function post(url, body){ return j(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body||{})}); }
+function toast(t){ const el=$('#toast'); el.textContent=t; el.style.display='block'; clearTimeout(toast._t); toast._t=setTimeout(()=>el.style.display='none',2200); }
+
+// ---------- map ----------
+const cv = $('#map'), ctx = cv.getContext('2d');
+function resize(){ const r = cv.getBoundingClientRect(); cv.width = r.width*devicePixelRatio; cv.height = r.height*devicePixelRatio; draw(); }
+function xy(lat, lon){
+  const w = cv.width, h = cv.height;
+  return [ (lon-BOUNDS.lon0)/(BOUNDS.lon1-BOUNDS.lon0)*w, (1-(lat-BOUNDS.lat0)/(BOUNDS.lat1-BOUNDS.lat0))*h ];
+}
+function draw(){
+  const w = cv.width, h = cv.height, d = devicePixelRatio;
+  ctx.clearRect(0,0,w,h);
+  // grid
+  ctx.strokeStyle = '#16212d'; ctx.lineWidth = 1;
+  for(let i=0;i<=12;i++){ ctx.beginPath(); ctx.moveTo(i*w/12,0); ctx.lineTo(i*w/12,h); ctx.stroke(); }
+  for(let i=0;i<=8;i++){ ctx.beginPath(); ctx.moveTo(0,i*h/8); ctx.lineTo(w,i*h/8); ctx.stroke(); }
+  // flood band + river (same curve as the data generator)
+  const river = (lon, off=0) => 10.8155 + off + 0.012*Math.sin((lon-78.6965)*40);
+  for (const [off, col, lw] of [[0,'#13314d',38*d],[0,'#1d4f7a',10*d],[0.028,'#1d4f7a',5*d]]) {
+    ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineCap='round'; ctx.beginPath();
+    for(let lon=BOUNDS.lon0; lon<=BOUNDS.lon1; lon+=0.004){ const [x,y]=xy(river(lon,off),lon); lon===BOUNDS.lon0?ctx.moveTo(x,y):ctx.lineTo(x,y); }
+    ctx.stroke();
+  }
+  ctx.fillStyle='#4a7aa6'; ctx.font = `${11*d}px system-ui`;
+  ctx.fillText('CAUVERY', xy(10.80, 78.50)[0], xy(10.80,78.50)[1]);
+  ctx.fillText('KOLLIDAM', xy(10.855, 78.50)[0], xy(10.855,78.50)[1]);
+  // routes
+  const byId = Object.fromEntries(incidents.map(i=>[i.incident_id,i]));
+  const res = Object.fromEntries(fleet.resources.map(r=>[r.rid,r]));
+  for (const i of incidents){
+    if(i.status!=='dispatched' || !i.assigned_resource) continue;
+    const r = res[i.assigned_resource]; if(!r) continue;
+    const [x0,y0]=xy(r.lat,r.lon), [x1,y1]=xy(i.lat,i.lon);
+    ctx.strokeStyle = i.assigned_resource.startsWith('DRN') ? '#7fb8ff88' : '#c8a2ff88';
+    ctx.setLineDash([5*d,4*d]); ctx.lineWidth = 1.5*d; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke(); ctx.setLineDash([]);
+  }
+  // incidents
+  const order = {STABLE:0, URGENT:1, CRITICAL:2};
+  for (const i of [...incidents].sort((a,b)=>order[a.triage]-order[b.triage])){
+    const [x,y] = xy(i.lat, i.lon);
+    const rad = (3 + Math.min(9, Math.sqrt(i.people_count||1)*1.6))*d;
+    ctx.globalAlpha = i.status==='dispatched' ? 0.35 : 0.95;
+    ctx.fillStyle = COLORS[i.triage]; ctx.beginPath(); ctx.arc(x,y,rad,0,7); ctx.fill();
+    if (i.triage==='CRITICAL' && i.status==='open'){ ctx.strokeStyle='#ff4d4f66'; ctx.lineWidth=2*d; ctx.beginPath(); ctx.arc(x,y,rad+5*d*(1+Math.sin(Date.now()/300)*0.3),0,7); ctx.stroke(); }
+    if (selected === i.incident_id){ ctx.strokeStyle='#fff'; ctx.lineWidth=2*d; ctx.beginPath(); ctx.arc(x,y,rad+3*d,0,7); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  // bases
+  for (const b of fleet.bases){
+    const [x,y]=xy(b.lat,b.lon);
+    ctx.fillStyle='#4c9aff'; ctx.fillRect(x-7*d,y-7*d,14*d,14*d);
+    ctx.fillStyle='#cfe3ff'; ctx.font=`600 ${11*d}px system-ui`; ctx.fillText(b.name, x+10*d, y+4*d);
+  }
+}
+setInterval(draw, 120);
+
+// ---------- panels ----------
+function renderQueue(){
+  const open = incidents.filter(i=>i.status==='open').slice(0,40);
+  $('#queue').innerHTML = open.map(i=>`
+    <div class="item" data-id="${i.incident_id}">
+      <div class="score" style="color:${COLORS[i.triage]}">${Math.round(i.priority)}</div>
+      <div><span class="chip ${i.triage}">${i.triage}</span> <b>${i.incident_id}</b>
+        ${i.needs_review?'<span class="rev">⚑ human review</span>':''}
+        <div class="reasons">${(i.reasons||[]).filter(r=>r.effect==='raises').slice(0,3).map(r=>'<b>'+r.label+'</b>').join(' · ') || 'low risk signals'}</div></div>
+      <div class="meta">${i.people_count} ppl<br>${i.source.replace('_',' ')}</div>
+    </div>`).join('') || '<div class="pad small">No open incidents. Start the simulation ▶</div>';
+  document.querySelectorAll('.item').forEach(el=>el.onclick=()=>openDrawer(el.dataset.id));
+}
+function renderPlan(){
+  $('#plan').innerHTML = planRows.slice(0,8).map(p=>`
+    <tr><td class="mono">${p.incident_id}</td><td><span class="chip ${p.triage}">${p.triage}</span></td>
+    <td class="mono">${Math.round(p.priority)}</td><td class="mono">${p.kind==='drone'?'🛩':'🚤'} ${p.resource}</td>
+    <td class="mono">${p.eta_min} min</td><td><button class="sm" onclick="approve(['${p.incident_id}'])">Approve</button></td></tr>`).join('')
+    || '<tr><td colspan="6" class="small">No proposals yet.</td></tr>';
+}
+async function approve(ids){
+  const r = await post('/api/approve',{incident_ids:ids, actor:'operator-1'});
+  toast(`Approved ${r.approved.length} dispatch${r.approved.length===1?'':'es'}`);
+  refresh();
+}
+$('#approveCrit').onclick = ()=> approve(planRows.filter(p=>p.triage==='CRITICAL').map(p=>p.incident_id));
+
+function openDrawer(id){
+  selected = id;
+  const i = incidents.find(x=>x.incident_id===id); if(!i) return;
+  const P = i.probabilities||{};
+  $('#drawerBody').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center"><h3>${i.incident_id}</h3><button class="sm" onclick="closeDrawer()">✕</button></div>
+    <span class="chip ${i.triage}">${i.triage}</span> <span class="small">priority ${i.priority} · ${i.inference_us.toFixed(1)} µs inference</span>
+    <div style="margin-top:10px">${['CRITICAL','URGENT','STABLE'].map(k=>`<div class="prob"><span>${k}</span><div class="bar"><span style="width:${(P[k]||0)*100}%;background:${COLORS[k]}"></span></div><span class="mono">${((P[k]||0)*100).toFixed(0)}%</span></div>`).join('')}</div>
+    <div style="margin-top:10px" class="small"><b style="color:var(--text)">Why this score</b> (largest factors):</div>
+    ${(i.reasons||[]).map(r=>`<div class="small">${r.effect==='raises'?'▲':'▼'} ${r.label} <span class="mono">(${r.weight>0?'+':''}${r.weight})</span></div>`).join('')}
+    <div class="kv">
+      <span>People / injured / severe</span><span>${i.people_count} / ${i.injured_count} / ${i.severe_injury?'yes':'no'}</span>
+      <span>Children / elderly</span><span>${i.vulnerable_count}</span>
+      <span>Water depth · rise</span><span>${i.water_level_m} m · ${i.water_rise_m_per_h} m/h</span>
+      <span>Collapse risk (drone imagery)</span><span>${i.structure_risk}</span>
+      <span>Medical need</span><span>${i.medical_need?'yes':'no'}</span>
+      <span>Reporter</span><span class="mono">${i.pseudonym} · ${i.phone_masked}</span>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="sm" onclick="reveal('${id}','operator')">Reveal contact (operator)</button>
+      <button class="sm danger" onclick="reveal('${id}','rescue-lead')">Reveal as rescue-lead</button>
+    </div><div id="revealOut" class="small" style="margin-top:8px"></div>`;
+  $('#drawer').style.display='block';
+}
+function closeDrawer(){ $('#drawer').style.display='none'; selected=null; }
+async function reveal(id, role){
+  const r = await post('/api/reveal',{incident_id:id, role, actor: role==='rescue-lead'?'lead-anitha':'operator-1', reason:'confirm location by phone'});
+  $('#revealOut').innerHTML = r.error ? `<span style="color:var(--crit)">⛔ ${r.error} (attempt logged)</span>` : `🔓 ${r.name} · ${r.phone} <span style="color:var(--muted)">(audited)</span>`;
+  refresh();
+}
+
+function renderStats(s){
+  $('#kC').textContent = s.open.CRITICAL; $('#kU').textContent = s.open.URGENT; $('#kS').textContent = s.open.STABLE;
+  $('#kD').textContent = s.dispatched; $('#kP50').textContent = s.p50_inference_us ?? '–'; $('#kP99').textContent = s.p99_inference_us ?? '–';
+  $('#clock').textContent = `T+${Math.round(s.sim_minutes)} min ${s.sim_running?'· LIVE':''}`;
+  const e = s.dispatch_eval;
+  if (e){
+    const row = (lbl, a, f) => `<div class="small">${lbl}</div>
+      <div class="bar"><span style="width:${a}%;background:var(--accent)"></span><em>AI ${a}%</em></div>
+      <div class="bar" style="margin-top:-8px"><span style="width:${f}%;background:#5b6b7f"></span><em>FCFS ${f}%</em></div>`;
+    $('#impact').innerHTML = row('Critical cases reached before harm', e.ai.critical_reached_in_time_pct, e.fcfs.critical_reached_in_time_pct)
+      + row('Urgent cases reached before harm', e.ai.urgent_reached_in_time_pct, e.fcfs.urgent_reached_in_time_pct)
+      + `<div class="small">Median wait for a critical case: <b style="color:var(--text)">${e.ai.critical_median_wait_min} min</b> vs ${e.fcfs.critical_median_wait_min} min.<br>${e.setup.incidents_per_surge} held-out incidents over ${e.setup.surge_hours} h, same fleet (${e.setup.fleet}), ${e.setup.runs} runs.</div>`;
+  }
+  const m = s.model_metrics;
+  if (m){
+    $('#mcard').innerHTML = `<table><thead><tr><th>Approach</th><th>Acc</th><th>F1</th><th>Crit. recall</th></tr></thead><tbody>${
+      m.results.map(r=>`<tr${r.model.includes('deployed')?' style="color:var(--accent)"':''}><td>${r.model.replace(/_/g,' ')}</td><td class="mono">${(r.accuracy*100).toFixed(1)}</td><td class="mono">${(r.macro_f1*100).toFixed(1)}</td><td class="mono">${(r.critical_recall*100).toFixed(1)}</td></tr>`).join('')
+    }</tbody></table><div class="small" style="margin-top:8px">Held-out test set: ${m.split.test} incidents. Transparent model deployed: every score comes with its reasons.</div>`;
+  }
+}
+function renderAudit(a){
+  $('#audit').innerHTML = a.map(x=>`<div>${new Date(x.ts*1000).toLocaleTimeString()} <b>${x.actor}</b> ${x.action} ${x.incident_id||''}</div>`).join('') || '<div>No actions yet.</div>';
+}
+
+async function refresh(){
+  const [inc, fl, st, pl, au] = await Promise.all([j('/api/incidents'), j('/api/fleet'), j('/api/stats'), j('/api/plan'), j('/api/audit')]);
+  incidents = inc; fleet = fl; planRows = pl;
+  renderQueue(); renderPlan(); renderStats(st); renderAudit(au);
+  const busy = fl.resources.filter(r=>r.busy).length;
+  $('#mapNote').textContent = `${fl.resources.length - busy}/${fl.resources.length} resources free`;
+  if (selected && $('#drawer').style.display==='block'){} // keep drawer
+}
+$('#startBtn').onclick = async ()=>{ await post('/api/simulate',{rate:3, total:150, reset:true}); toast('Flood surge simulation started'); };
+$('#stopBtn').onclick = async ()=>{ await post('/api/simulate',{action:'stop'}); toast('Simulation stopped'); };
+
+(async ()=>{
+  const h = await j('/api/health');
+  const el = $('#arch');
+  el.textContent = h.on_ibm_z ? `IBM Z · ${h.arch} · LinuxONE` : `arch: ${h.arch} (dev)`;
+  if (h.on_ibm_z) el.classList.add('z');
+  resize(); refresh(); setInterval(refresh, 1500);
+})();
+window.addEventListener('resize', resize);
+window.caption = (t)=>{ const c=$('#caption'); if(!t){c.style.display='none';return;} c.textContent=t; c.style.display='block'; };
+</script>
+</body>
+</html>

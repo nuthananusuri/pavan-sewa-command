@@ -1,0 +1,7 @@
+# Only needed to regenerate data / retrain / export ONNX (any laptop)
+-r requirements.txt
+numpy>=1.24
+pandas>=1.5
+scikit-learn>=1.2
+onnx>=1.14
+onnxruntime>=1.16

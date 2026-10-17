@@ -1,0 +1,78 @@
+{
+ "split": {
+  "train": 4200,
+  "val": 900,
+  "test": 900
+ },
+ "results": [
+  {
+   "model": "rule_baseline_checklist",
+   "accuracy": 0.6178,
+   "macro_f1": 0.5903,
+   "critical_recall": 0.6797,
+   "confusion_matrix": [
+    [
+     338,
+     141,
+     17
+    ],
+    [
+     73,
+     114,
+     64
+    ],
+    [
+     8,
+     41,
+     104
+    ]
+   ]
+  },
+  {
+   "model": "logistic_regression_deployed",
+   "accuracy": 0.8322,
+   "macro_f1": 0.8157,
+   "critical_recall": 0.8497,
+   "confusion_matrix": [
+    [
+     425,
+     71,
+     0
+    ],
+    [
+     27,
+     194,
+     30
+    ],
+    [
+     0,
+     23,
+     130
+    ]
+   ]
+  },
+  {
+   "model": "gradient_boosting_benchmark",
+   "accuracy": 0.8067,
+   "macro_f1": 0.7707,
+   "critical_recall": 0.719,
+   "confusion_matrix": [
+    [
+     451,
+     45,
+     0
+    ],
+    [
+     60,
+     165,
+     26
+    ],
+    [
+     1,
+     42,
+     110
+    ]
+   ]
+  }
+ ]
+}

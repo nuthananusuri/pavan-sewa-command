@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#44546a"/></marker>
+    <marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d9731f"/></marker>
+    <style>
+      .t{font-size:20px;font-weight:700;fill:#13202f}
+      .s{font-size:15px;fill:#44546a}
+      .h{font-size:13px;font-weight:700;letter-spacing:1.5px;fill:#6b7a8c}
+      .box{fill:#ffffff;stroke:#c9d3df;stroke-width:2;rx:12}
+      .key{fill:#fff4e8;stroke:#ff9933;stroke-width:2.5;rx:12}
+      .ln{stroke:#44546a;stroke-width:2.5;fill:none;marker-end:url(#a)}
+      .lo{stroke:#d9731f;stroke-width:2.5;fill:none;marker-end:url(#o);stroke-dasharray:7 5}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#f6f8fb"/>
+  <text x="40" y="52" font-size="30" font-weight="800" fill="#13202f">PAVAN SEWA Command — solution architecture</text>
+  <text x="40" y="82" class="s">Real-time disaster triage &amp; dispatch: AI inference, victim data and decisions all stay on one IBM LinuxONE system</text>
+
+  <!-- inputs -->
+  <text x="40" y="140" class="h">FIELD INPUTS</text>
+  <rect class="box" x="40" y="155" width="270" height="105"/>
+  <text x="60" y="190" class="t">SOS calls / SMS / IVR</text>
+  <text x="60" y="216" class="s">people, injuries, medical need,</text>
+  <text x="60" y="236" class="s">location, phone battery</text>
+  <rect class="box" x="40" y="285" width="270" height="125"/>
+  <text x="60" y="320" class="t">Scout drones (our design)</text>
+  <text x="60" y="346" class="s">onboard vision: head-count,</text>
+  <text x="60" y="366" class="s">water depth &amp; rise rate,</text>
+  <text x="60" y="386" class="s">building collapse risk</text>
+  <rect class="box" x="40" y="435" width="270" height="85"/>
+  <text x="60" y="470" class="t">Helpline / NGO relays</text>
+  <text x="60" y="496" class="s">lower-confidence reports</text>
+
+  <!-- LinuxONE boundary -->
+  <rect x="360" y="115" width="880" height="620" rx="20" fill="#eaf2ff" stroke="#2b5d9e" stroke-width="3"/>
+  <text x="385" y="150" font-size="19" font-weight="800" fill="#1d4b85">IBM LinuxONE / IBM Z  (s390x)</text>
+  <text x="385" y="174" class="s">pervasive encryption · CPACF crypto · Telum on-chip AI · mainframe-class availability</text>
+
+  <rect class="box" x="390" y="200" width="240" height="100"/>
+  <text x="410" y="235" class="t">Ingest REST API</text>
+  <text x="410" y="260" class="s">Flask · POST /api/incidents</text>
+  <text x="410" y="280" class="s">validates &amp; timestamps</text>
+
+  <rect class="key" x="680" y="200" width="250" height="135"/>
+  <text x="700" y="235" class="t">AI Triage Engine</text>
+  <text x="700" y="260" class="s">explainable multinomial model</text>
+  <text x="700" y="280" class="s">CRITICAL / URGENT / STABLE</text>
+  <text x="700" y="300" class="s">priority 0–100 + top reasons</text>
+  <text x="700" y="322" class="s" fill="#b35a12">microseconds per incident</text>
+
+  <rect class="box" x="975" y="200" width="240" height="135"/>
+  <text x="995" y="235" class="t">ONNX → zDLC</text>
+  <text x="995" y="260" class="s">same model compiled for</text>
+  <text x="995" y="280" class="s">Telum NNPA (z16+)</text>
+  <text x="995" y="300" class="s">JSON engine = portable</text>
+  <text x="995" y="320" class="s">fallback</text>
+
+  <rect class="box" x="390" y="360" width="240" height="125"/>
+  <text x="410" y="395" class="t">Privacy Vault</text>
+  <text x="410" y="420" class="s">AES (Fernet) name &amp; phone</text>
+  <text x="410" y="440" class="s">keyed pseudonyms</text>
+  <text x="410" y="460" class="s">masked numbers on screen</text>
+
+  <rect class="key" x="680" y="360" width="250" height="125"/>
+  <text x="700" y="395" class="t">Dispatch Optimizer</text>
+  <text x="700" y="420" class="s">priority-first, ETA tie-break</text>
+  <text x="700" y="440" class="s">drone payload 6 kg / boat</text>
+  <text x="700" y="460" class="s">capacity 10, round trips</text>
+
+  <rect class="box" x="975" y="360" width="240" height="125"/>
+  <text x="995" y="395" class="t">Incident Store</text>
+  <text x="995" y="420" class="s">SQLite (demo) → Db2 /</text>
+  <text x="995" y="440" class="s">PostgreSQL on LinuxONE</text>
+  <text x="995" y="460" class="s">ciphertext only for PII</text>
+
+  <rect class="key" x="390" y="525" width="540" height="110"/>
+  <text x="410" y="560" class="t">Command Dashboard  ·  human-in-the-loop</text>
+  <text x="410" y="586" class="s">live map · AI priority queue with reasons · proposed plan → operator approves</text>
+  <text x="410" y="608" class="s">low-confidence cases flagged for review · nothing dispatches automatically</text>
+
+  <rect class="box" x="975" y="525" width="240" height="110"/>
+  <text x="995" y="560" class="t">Audit Log</text>
+  <text x="995" y="586" class="s">every approval, contact</text>
+  <text x="995" y="606" class="s">reveal &amp; denied attempt</text>
+
+  <rect x="390" y="660" width="825" height="56" rx="10" fill="#ffffff" stroke="#c9d3df" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="410" y="694" class="s"><tspan font-weight="700" fill="#13202f">Offline learning loop:</tspan> incident history → train.py (vs checklist &amp; boosting) → model card → AI-vs-FCFS dispatch test</text>
+
+  <!-- outputs -->
+  <text x="1290" y="140" class="h">RESPONSE</text>
+  <rect class="box" x="1290" y="155" width="270" height="105"/>
+  <text x="1310" y="190" class="t">Medical drones</text>
+  <text x="1310" y="216" class="s">first-aid / insulin kit, comms,</text>
+  <text x="1310" y="236" class="s">first contact in minutes</text>
+  <rect class="box" x="1290" y="285" width="270" height="105"/>
+  <text x="1310" y="320" class="t">Rescue boats / NDRF</text>
+  <text x="1310" y="346" class="s">evacuation for deep water,</text>
+  <text x="1310" y="366" class="s">severe injuries</text>
+  <rect class="box" x="1290" y="415" width="270" height="105"/>
+  <text x="1310" y="450" class="t">Rescue lead</text>
+  <text x="1310" y="476" class="s">only role allowed to decrypt</text>
+  <text x="1310" y="496" class="s">victim contact (audited)</text>
+
+  <!-- arrows -->
+  <path class="ln" d="M310 207 H390"/>
+  <path class="ln" d="M310 347 H350 V250 H390"/>
+  <path class="ln" d="M310 477 H350 V250"/>
+  <path class="ln" d="M630 250 H680"/>
+  <path class="ln" d="M510 300 V360"/>
+  <path class="ln" d="M930 262 H975"/>
+  <path class="ln" d="M805 335 V360"/>
+  <path class="ln" d="M630 422 H680"/>
+  <path class="ln" d="M930 422 H975"/>
+  <path class="ln" d="M805 485 V525"/>
+  <path class="ln" d="M930 580 H975"/>
+  <path class="lo" d="M900 525 V505 H1250 V207 H1290"/>
+  <path class="lo" d="M1250 337 H1290"/>
+  <path class="lo" d="M1215 467 H1290"/>
+
+  <text x="40" y="790" class="h">IN NUMBERS (held-out data, simulated 6-hour flood surge, same fleet)</text>
+  <text x="40" y="830" font-size="22" fill="#13202f"><tspan font-weight="800" fill="#d9731f">65%</tspan> of critical cases reached before harm vs <tspan font-weight="800">17%</tspan> first-come-first-served  ·  median critical wait <tspan font-weight="800" fill="#d9731f">47 min</tspan> vs 271 min  ·  critical recall 85% vs 68% checklist</text>
+</svg>
