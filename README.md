@@ -31,6 +31,16 @@ Dispatch simulation: 300 held-out incidents in a 6-hour surge, same fleet (9 dro
 
 > **Honest note:** the data is synthetic. It comes from a generator modelled on the Cauvery / Kollidam flood zone around Tiruchirappalli (`data/generate.py`), and the ground-truth formula is hidden from the model. The pipeline is built to be retrained on real NDMA / state control-room logs.
 
+## Measured on IBM LinuxONE (s390x)
+LinuxONE Community Cloud VM · RHEL 9 · Python 3.9 (`model/benchmark_s390x.txt`)
+
+| Metric | Result |
+|---|---|
+| Triage latency p50 / p99 | **17.6 µs / 30.3 µs** |
+| Throughput, 1 core | **54,172 incidents/s** |
+| Dispatch plan for 150 open incidents | **2.8 ms** |
+| AES field encryption | 48 µs per field |
+
 ## Why IBM Z / LinuxONE
 * **AI next to the data:** inference runs in-process on the same system that stores the incidents. No external AI API, no data leaving the platform, and latency measured in microseconds (`scripts/benchmark.py`).
 * **Telum on-chip AI path:** the model is exported to core-op ONNX (`scripts/export_onnx.py`: MatMul / Add / Softmax) so it can be compiled with the **IBM Z Deep Learning Compiler** (`--maccel=NNPA`) for the Integrated Accelerator for AI on z16 and later.

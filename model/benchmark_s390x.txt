@@ -1,0 +1,8 @@
+host                 : s390x  Linux-5.14.0-687.58.1.el9_8.s390x-s390x-with-glibc2.34
+python               : 3.9.25
+triage inferences    : 6000
+latency p50 / p99    : 17.6 us / 30.3 us
+mean latency         : 18.1 us
+throughput (1 core)  : 54,172 incidents/s
+AES encrypt per field: 48.0 us
+dispatch plan 150 inc: 2.8 ms
